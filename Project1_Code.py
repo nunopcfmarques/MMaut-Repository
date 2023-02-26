@@ -1,4 +1,5 @@
 import numpy as np
+from random import *
 
 
 def get_low_rank(U: np.ndarray, S: np.ndarray, Vh: np.ndarray, k: int) -> np.ndarray:
@@ -27,8 +28,10 @@ def get_errors(A: np.ndarray, U: np.ndarray, S: np.ndarray, Vh: np.ndarray, norm
     errors = np.zeros(size)
 
     for k in range(1, size + 1):
+        A_err = A - get_low_rank(U, S, Vh, k)
         errors[k - 1] = np.linalg.norm(
-            A - get_low_rank(U, S, Vh, k), ord=norm) ** 2
+            A_err, ord=norm) ** 2
 
     print(errors)
+
     return errors
