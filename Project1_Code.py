@@ -3,6 +3,14 @@ from random import *
 
 
 def get_low_rank(U: np.ndarray, S: np.ndarray, Vh: np.ndarray, k: int) -> np.ndarray:
+    '''
+    Input:
+    U, S, Vh: np.ndarray's resulting from SVD
+    k: An integer for the reduce rank
+
+    Output:
+    A_k: Reduced np.ndarray 
+    '''
 
     # Choose first k colums of U
     U_k = U[:, :k]
@@ -21,19 +29,30 @@ def get_low_rank(U: np.ndarray, S: np.ndarray, Vh: np.ndarray, k: int) -> np.nda
     return A_k
 
 
-def get_errors(A: np.ndarray, U: np.ndarray, S: np.ndarray, Vh: np.ndarray, norm: str) -> np.ndarray[np.ndarray, np.ndarray]:
+def get_errors(A: np.ndarray, U: np.ndarray, S: np.ndarray, Vh: np.ndarray, norm: str) -> np.ndarray:
+    '''
+    Input: 
+    U, S, Vh: np.ndarray's resulting from SVD
+    norm: A string for the norm
 
+    Output:
+    errors: np.ndarray with the errors from 1 to size(S)
+    '''
     size = np.size(S)
 
-    # erros in array with two sub-arrays each of size k.
-    # the first list is the norm of the error
-    # the second is the sum of squared residuals
-    errors = np.zeros((2, size))
+    errors = np.zeros((size))
+
+    if norm == 'sqrt':
+        exp = "np.sum(np.square(A_err))"
+
+    else:
+        exp = "np.linalg.norm(A_err, ord=norm)"
 
     for k in range(1, size + 1):
         A_err = A - get_low_rank(U, S, Vh, k)
-        errors[0][k - 1] = np.linalg.norm(
-            A_err, ord=norm)
-        errors[1][k - 1] = np.sum(np.square(A_err))
+        errors[k - 1] = eval(exp)
+
+    print(str(norm) + ": " + str(errors))
+    print(" ")
 
     return errors
