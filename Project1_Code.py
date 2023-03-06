@@ -22,9 +22,8 @@ def get_low_rank(U: np.ndarray, S: np.ndarray, Vh: np.ndarray, k: int) -> np.nda
     S_k = np.diag(S)[:k, :k]
 
     # Make matrix
-    A_k = (np.dot(U_k, S_k))
 
-    A_k = (np.dot(A_k, Vh_k))
+    A_k = np.linalg.multi_dot([U_k, S_k, Vh_k])
 
     return A_k
 
